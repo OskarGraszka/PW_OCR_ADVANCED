@@ -4,6 +4,7 @@
 <img src="images\qgis-logo.png" alt="qgis" width="200">
 
 QGIS processing algorithm which recognizes text from raster images inside input polygon features and saves as attribute value of output layer.
+
 PW_OCR_ADVENCED script processes in different way than [*PW_OCR*](https://github.com/OskarGraszka/PW_OCR). Check specifications of both scripts to choose better one for your applications.
 
 ## Python Tesseract
@@ -20,7 +21,7 @@ data = pytesseract.image_to_data(Raster_lyr.source(), lang='pol', config=self.co
 
 ## Algorithm
 
-![Schema](images/Schemat2.png "Schema")
+![Schema](images/Schemat2.PNG "Schema")
 
 This algorithm iterates over all input raster layers and processes them according to the scheme below:
 - Regonizing all words on the sheet and returning table with their pixel coordinates , width, height, confidence of recognition and recognizd text (*Pytesseract* library).
