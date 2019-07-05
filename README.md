@@ -20,7 +20,7 @@ data = pytesseract.image_to_data(Raster_lyr.source(), lang='pol', config=self.co
 
 ## Algorithm
 
-![Schema](images/Schemat2.png "Schema")
+![Schema](images/Schemat2.png ")
 
 This algorithm iterates over all input raster layers and processes them according to the scheme below:
 - Regonizing all words on the sheet and returning table with their pixel coordinates , width, height, confidence of recognition and recognizd text (*Pytesseract* library).
