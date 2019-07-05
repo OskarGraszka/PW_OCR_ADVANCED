@@ -1,5 +1,5 @@
 
-# PW_OCR_ADVENCED
+# PW_OCR_ADVANCED
 
 <img src="images\qgis-logo.png" alt="qgis" width="200">
 
