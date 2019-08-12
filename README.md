@@ -29,6 +29,9 @@ This algorithm iterates over all input raster layers and processes them accordin
 - Itarating over all features overlaying raster and collecting all words which centroids are inside feature boundaries.
 - Merging sentences from all collected for each feature words.
 - Adding recognized text (sentence) as attribute value to output feature field.
+- Adding confidence of recognition as list of percentage values for each word to confidence output field.
+
+	```Cekcyn polski``` -> ```[96,71]```
 
 #
 ![screen](images/schema2.gif)
@@ -60,4 +63,11 @@ This script works properly only if edges of rectified rasters are paralell to ax
 <br><b>Add words recognized with zero confidence</b>
 <dd>If there are some words recognized with zero confidence, they will be add too.</dd> 
 <br><b>Output layer</b>
-<dd>Location of the output layer with filled text attribute.</dd> 
+<dd>Location of the output layer with filled text attribute.</dd>
+</dd>
+
+## See also
+
+[*PW_OCR*](https://github.com/OskarGraszka/PW_OCR)
+
+[*PW_ABBREVIATIONS*](https://github.com/OskarGraszka/PW_ABBREVIATIONS)
