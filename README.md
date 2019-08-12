@@ -31,7 +31,7 @@ This algorithm iterates over all input raster layers and processes them accordin
 - Adding recognized text (sentence) as attribute value to output feature field.
 - Adding confidence of recognition as list of percentage values for each word to confidence output field.
 
-	```Cekcyn polski``` -> ```[96,71]```
+	```Cekcyn Polski``` -> ```[96,71]```
 
 #
 ![screen](images/schema2.gif)
