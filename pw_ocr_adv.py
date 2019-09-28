@@ -36,7 +36,7 @@ from pytesseract import Output
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 
-class ExampleProcessingAlgorithm(QgsProcessingAlgorithm):
+class PW_OCR_Advanced_Algorithm(QgsProcessingAlgorithm):
     # Constants used to refer to parameters and outputs. They will be
     # used when calling the algorithm from another algorithm, or when
     # calling from the QGIS console.
@@ -46,6 +46,8 @@ class ExampleProcessingAlgorithm(QgsProcessingAlgorithm):
     FIELD = 'FIELD'
     CONF_FIELD = 'CONF FIELD'
     ALL_ACTIVE_RASTERS = 'ALL ACTIVE RASTERS'
+    PSM = 'PSM'
+    OEM = 'OEM'
     ZERO_CONF = 'ZERO CONF'
     OUTPUT = 'OUTPUT'
 
@@ -53,7 +55,7 @@ class ExampleProcessingAlgorithm(QgsProcessingAlgorithm):
         return QCoreApplication.translate('Processing', string)
 
     def createInstance(self):
-        return ExampleProcessingAlgorithm()
+        return PW_OCR_Advanced_Algorithm()
 
     def name(self):
         return 'pw_ocr_adv'
@@ -133,7 +135,7 @@ class ExampleProcessingAlgorithm(QgsProcessingAlgorithm):
         )
         self.addParameter(
             QgsProcessingParameterEnum(
-                'PSM',
+                self.PSM,
                 self.tr('Page Segmentation Mode'),
                 options = [
                     'Orientation and script detection (OSD) only.',
@@ -156,7 +158,7 @@ class ExampleProcessingAlgorithm(QgsProcessingAlgorithm):
         )
         self.addParameter(
             QgsProcessingParameterEnum(
-                'OEM',
+                self.OEM,
                 self.tr('OCR Engine Model'),
                 options = [
                     'Legacy Tesseract',
@@ -292,30 +294,30 @@ class ExampleProcessingAlgorithm(QgsProcessingAlgorithm):
                 if layer.type() == 1 :
                     self.OnThisRaster(feedback, layer)
         
-        return {'Recognized': str(self.actual)}
+        return {self.OUTPUT: dest_id}
         
     def OnThisRaster(self, feedback, Raster_lyr):
-        feedback.pushCommandInfo('\nComputing image ' + str(Raster_lyr.name()) + '\n')
-        data = pytesseract.image_to_data(Raster_lyr.source(), lang='pol', config=self.config, output_type=Output.DICT)
-        
-        text = data['text']
-        table_of_words=[]
-        for i in range (0,len(text),1):
-            pix_centroid_left=data['left'][i]+data['width'][i]/2
-            pix_centroid_top=data['top'][i]+data['height'][i]/2
-            crs_point = self.PixelCoordsToCRSPoint(feedback, Raster_lyr, pix_centroid_left, pix_centroid_top)
-            element = [crs_point,data['text'][i],data['conf'][i]]
-            table_of_words.append(element)
-        feedback.pushInfo('table_of_words: ' + str(table_of_words))
+
         idsList = self.index.intersects(Raster_lyr.extent())
-        if idsList:
+        if idsList and len(idsList)>0:
+            feedback.pushCommandInfo('\nComputing image ' + str(Raster_lyr.name()) + '.\n')
+            data = pytesseract.image_to_data(Raster_lyr.source(), lang='pol', config=self.config, output_type=Output.DICT)
+            text = data['text']
+            table_of_words=[]
+            for i in range (0,len(text),1):
+                pix_centroid_left=data['left'][i]+data['width'][i]/2
+                pix_centroid_top=data['top'][i]+data['height'][i]/2
+                crs_point = self.PixelCoordsToCRSPoint(feedback, Raster_lyr, pix_centroid_left, pix_centroid_top)
+                element = [crs_point,data['text'][i],data['conf'][i]]
+                table_of_words.append(element)
             for id in idsList:
                 for feat in self.feature_source.getFeatures(QgsFeatureRequest()):
                     if feedback.isCanceled(): break
                     if int(feat.id()) == id:
                         self.OnThisFeature(feedback, feat, table_of_words)
                         break
-        
+        else:
+            feedback.pushCommandInfo('\nImage ' + str(Raster_lyr.name()) + ' does not intersect any feature.\n')
         
     def OnThisFeature(self, feedback, feat, table_of_words):
         chosen_elements=[]

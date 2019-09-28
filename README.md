@@ -25,7 +25,7 @@ data = pytesseract.image_to_data(Raster_lyr.source(), lang='pol', config=self.co
 
 
 This algorithm iterates over all input raster layers and processes them according to the scheme below:
-- Recognizing all words on the sheet and returning table with their pixel coordinates , width, height, confidence of recognition and recognizd text (*Pytesseract* library).
+- Recognizing all words on the sheet and returning table with their pixel coordinates , width, height, confidence of recognition and recognized text (*Pytesseract* library).
 - Itarating over all features overlaying raster and collecting all words which centroids are inside feature boundaries.
 - Merging sentences from all collected for each feature words.
 - Adding recognized text (sentence) as attribute value to output feature field.
